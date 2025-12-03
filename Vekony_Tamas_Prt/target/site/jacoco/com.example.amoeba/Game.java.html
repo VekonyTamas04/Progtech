@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="hu"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">amoeba</a> &gt; <a href="index.source.html" class="el_package">com.example.amoeba</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package com.example.amoeba;
+
+import java.util.*;
+import java.io.*;
+
+<span class="nc" id="L6">public class Game {</span>
+<span class="nc" id="L7">    private final Scanner scanner = new Scanner(System.in);</span>
+    private Board board;
+    private Player human;
+    private Player aiPlayer;
+<span class="nc" id="L11">    private final RandomAI ai = new RandomAI();</span>
+<span class="nc" id="L12">    private final Persistence persistence = new Persistence();</span>
+
+    public void start(){
+<span class="nc" id="L15">        System.out.println(&quot;---- Amoba NxM ----&quot;);</span>
+<span class="nc" id="L16">        System.out.print(&quot;Adj meg egy sort N (4-25, alapból 10): &quot;);</span>
+<span class="nc" id="L17">        int n = readIntOrDefault(10);</span>
+<span class="nc" id="L18">        System.out.print(&quot;Adj meg egy oszlopot M (4..N, alapból 10): &quot;);</span>
+<span class="nc" id="L19">        int m = readIntOrDefault(10);</span>
+<span class="nc" id="L20">        board = new Board(n,m);</span>
+<span class="nc" id="L21">        System.out.print(&quot;Add meg a neved: &quot;);</span>
+<span class="nc" id="L22">        String name = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        if(name.isEmpty()) name=&quot;Játékos&quot;;</span>
+<span class="nc" id="L24">        human = new Player(name,'x');</span>
+<span class="nc" id="L25">        aiPlayer = new Player(&quot;Gép&quot;,'o');</span>
+
+<span class="nc" id="L27">        int r = n/2;</span>
+<span class="nc" id="L28">        int c = m/2;</span>
+<span class="nc" id="L29">        board.place(new Move(r,c),'x');</span>
+<span class="nc" id="L30">        System.out.println(&quot;Kezdő pozíció (autómatikusan lehejez x-et középre):&quot;);</span>
+<span class="nc" id="L31">        board.print(System.out);</span>
+
+<span class="nc" id="L33">        loop();</span>
+<span class="nc" id="L34">    }</span>
+
+    private int readIntOrDefault(int d){
+<span class="nc" id="L37">        String s = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if(s.isEmpty()) return d;</span>
+<span class="nc" id="L39">        try{ return Integer.parseInt(s); }catch(Exception e){ return d; }</span>
+    }
+
+    private void loop(){
+<span class="nc" id="L43">        boolean humanTurn =</span>
+        humanTurn = true;
+        while(true){
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            if(humanTurn){</span>
+<span class="nc" id="L47">                System.out.println(&quot;Adj meg egy pozíciót (pl. a5), vagy 'save fname', 'load fname', 'high', 'exit':&quot;);</span>
+<span class="nc" id="L48">                String line = scanner.nextLine().trim();</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                if(line.equalsIgnoreCase(&quot;exit&quot;)){ System.out.println(&quot;Szia&quot;); break; }</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                if(line.startsWith(&quot;save &quot;)){</span>
+<span class="nc" id="L51">                    String f=line.substring(5).trim();</span>
+<span class="nc" id="L52">                    try{ board.saveToFile(new File(f)); System.out.println(&quot;elmentve ide &quot; + f); }catch(Exception e){ e.printStackTrace(); }</span>
+<span class="nc" id="L53">                    continue;</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">                }else if(line.startsWith(&quot;load &quot;)){</span>
+<span class="nc" id="L55">                    String f=line.substring(5).trim();</span>
+<span class="nc" id="L56">                    try{ board = Board.loadFromFile(new File(f)); System.out.println(&quot;betöltve innen &quot; + f); board.print(System.out); }catch(Exception e){ e.printStackTrace(); }</span>
+<span class="nc" id="L57">                    continue;</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                }else if(line.equalsIgnoreCase(&quot;high&quot;)){</span>
+<span class="nc" id="L59">                    persistence.printHighscores(); continue;</span>
+                }
+<span class="nc" id="L61">                Move m = parseMove(line);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                if(m==null){ System.out.println(&quot;Nem megfelelő formátum&quot;); continue; }</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                if(!board.inBounds(m)){ System.out.println(&quot;Kereteken kívül&quot;); continue; }</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                if(!board.isEmpty(m.getRow(), m.getCol())){ System.out.println(&quot;A hely már foglalt&quot;); continue; }</span>
+<span class="nc bnc" id="L65" title="All 4 branches missed.">                if(board.anyPlaced() &amp;&amp; !board.hasAdjacent(m)){ System.out.println(&quot;Csak kitöltött mező mellé lehet&quot;); continue; }</span>
+<span class="nc" id="L66">                board.place(m, human.getMark());</span>
+<span class="nc" id="L67">                board.print(System.out);</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                if(board.checkWin(human.getMark())){ System.out.println(&quot;Győztél!&quot;); persistence.recordWin(human.getName()); break; }</span>
+<span class="nc" id="L69">            } else {</span>
+<span class="nc" id="L70">                Move m = ai.pickMove(board, aiPlayer.getMark());</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                if(m==null){ System.out.println(&quot;Döntetlen.&quot;); break; }</span>
+<span class="nc" id="L72">                board.place(m, aiPlayer.getMark());</span>
+<span class="nc" id="L73">                System.out.println(&quot;A gép ide rakta: &quot; + (char)('a'+m.getCol()) + (m.getRow()+1));</span>
+<span class="nc" id="L74">                board.print(System.out);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">                if(board.checkWin(aiPlayer.getMark())){ System.out.println(&quot;A gép nyer!&quot;); persistence.recordWin(aiPlayer.getName()); break; }</span>
+            }
+<span class="nc bnc" id="L77" title="All 2 branches missed.">            humanTurn = !humanTurn;</span>
+        }
+<span class="nc" id="L79">    }</span>
+
+    private Move parseMove(String s){
+<span class="nc" id="L82">        s = s.trim().toLowerCase();</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if(s.length()&lt;2) return null;</span>
+<span class="nc" id="L84">        char colC = s.charAt(0);</span>
+<span class="nc bnc" id="L85" title="All 4 branches missed.">        if(colC&lt;'a' || colC&gt;'z') return null;</span>
+<span class="nc" id="L86">        int col = colC - 'a';</span>
+<span class="nc" id="L87">        String rest = s.substring(1);</span>
+        try{
+<span class="nc" id="L89">            int row = Integer.parseInt(rest) - 1;</span>
+<span class="nc" id="L90">            return new Move(row,col);</span>
+<span class="nc" id="L91">        }catch(Exception e){ return null; }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

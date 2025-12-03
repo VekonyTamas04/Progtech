@@ -1,0 +1,7 @@
+com\example\amoeba\Board.class
+com\example\amoeba\Game.class
+com\example\amoeba\Move.class
+com\example\amoeba\Main.class
+com\example\amoeba\Persistence.class
+com\example\amoeba\Player.class
+com\example\amoeba\RandomAI.class

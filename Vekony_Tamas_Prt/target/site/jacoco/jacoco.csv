@@ -1,0 +1,8 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+amoeba,com.example.amoeba,Main,8,0,0,0,3,0,2,0,2,0
+amoeba,com.example.amoeba,Persistence,53,43,3,1,9,16,3,3,1,3
+amoeba,com.example.amoeba,Player,58,0,8,0,12,0,10,0,6,0
+amoeba,com.example.amoeba,RandomAI,26,0,2,0,5,0,3,0,2,0
+amoeba,com.example.amoeba,Move,41,15,8,0,5,2,7,3,3,3
+amoeba,com.example.amoeba,Game,380,0,38,0,66,0,24,0,5,0
+amoeba,com.example.amoeba,Board,160,355,44,54,18,42,35,29,3,12
